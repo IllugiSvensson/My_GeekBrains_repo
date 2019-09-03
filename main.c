@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define T char
+#define T char  //Для первой задачи поменять на int
 #define MaxN 1000
 
 T Stack[MaxN];
@@ -163,6 +163,7 @@ int main(int argc, char *argv[]) {
 
     PrintStack();
     puts(" ");
+    puts(" ");
 
 //3. Написать программу, которая определяет, является ли введённая скобочная последовательность
 //правильной. Примеры правильных скобочных выражений – (), ([])(), {}(), ([{}]),
@@ -171,48 +172,53 @@ int main(int argc, char *argv[]) {
 
     char *arr;
     int i;
-    char symb;
-    int cnt1 = 0;
-    int cnt2 = 0;
-    int cnt3 = 0;
-    arr = "]2/}5*(4+7){]";
+    arr = "[2/{5*(4+7)}]";
 
-        for(i = 0; i < strlen(arr); i++)
-            if(isdigit(arr[i]) == 0)
-                Push(arr[i]);
+       for(i = 0; i < strlen(arr); i++) {
 
-        while(N != -1) {
-            switch(Pop()){
-            case '(':
-                cnt1++;
-                break;
-            case ')':
-                cnt1--;
-                if(cnt1 == -1) printf("Error");
+            switch(arr[i]) {
 
-                break;
-            case '[':
-                cnt2++;
-                break;
-            case ']':
-                cnt2--;
-                if(cnt2 == -1) printf("Error");
-                break;
-            case '{':
-                cnt3++;
-                break;
-            case '}':
-                cnt3--;
-                if(cnt3 == -1) printf("Error");
-                break;
+                case '(':
+                    Push(arr[i]);
+                    break;
+                case '{':
+                    Push(arr[i]);
+                    break;
+                case '[':
+                    Push(arr[i]);
+                    break;
+                case ')':
+                    if((N == -1)  || (Stack[N] != '('))
+                        printf("Wrong )\n");
+                    else Pop();
+                    break;
+                case '}':
+                    if((N == -1)  || (Stack[N] != '{'))
+                        printf("Wrong }\n");
+                    else Pop();
+                    break;
+                case ']':
+                    if((N == -1)  || (Stack[N] != '['))
+                        printf("Wrong ]\n");
+                    else Pop();
+                    break;
+
+            }
+
         }
-            printf("%c", Pop());
-}
-        printf("\n%d_%d_%d",cnt1,cnt2,cnt3);
+
+       if(N != -1)
+
+           printf("Error!\n");
+
+       else
+
+           printf("Nice!\n");
+
 return 0;
 }
 
-
+//Сделаю потом
 /*
 4. *Создать функцию, копирующую односвязный список (то есть создающую в памяти копию односвязного списка без удаления первого списка).
 5. *Реализовать алгоритм перевода из инфиксной записи арифметического выражения в постфиксную.
