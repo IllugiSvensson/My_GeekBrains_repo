@@ -7,6 +7,7 @@
 
 T Stack[MaxN];
 int N = -1;
+
 typedef struct TNode {
 
     T value;
