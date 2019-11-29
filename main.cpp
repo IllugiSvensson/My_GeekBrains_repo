@@ -1,244 +1,186 @@
 #include <iostream>
-#include <cmath>
 #include <string>
-#include <vector>
-#include <cassert>
-#include <iterator>
-
 using namespace std;
-
-class ArrayInt {
-private:
-    int length;
-    int *data;
+class Cap {
 public:
-    ArrayInt() : length(0), data(NULL) { }
-    ArrayInt(int l) : length(l) {
-        assert(l>=0);
-
-        if (l > 0)
-            data = new int[l];
-        else
-            data = NULL;
+    string getColor() {
+        return color;
     }
-    ~ArrayInt() { delete[] data; }
-    void erase() {
-        delete[] data;
-        data = NULL;
-        length = 0;
-    }
-    int size() {
-        return length;
-    }
-    int& operator[] (int index) {
-        assert(index >=0 && index<length);
-        return data[index];
-    }
-    void resize(int newLength){
-        if (length==newLength) return;
-        if (newLength <=0){
-            erase();
-            return;
-        }
-        int *d = new int[newLength];
-        if (length>0){
-            int elements = (newLength>length) ? length : newLength;
-            for (int index=0; index<elements; ++index){
-                d[index] = data[index];
-            }
-        }
-        delete[] data;
-        data = d;
-        length = newLength;
-    }
-    void insertBefore(int value, int index){
-        assert(index >=0 && index <=length);
-        int *d = new int[length+1];
-        for (int i = 0; i<index; ++i){
-            d[i] = data[i];
-        }
-        d[index] = value;
-        for(int i = index; i<length; ++i){
-            d[i+1] = data[i];
-        }
-        delete[] data;
-        data = d;
-        ++length;
-    }
-    void push_back(int value) {
-        insertBefore(value, length);
-    }
-
-    //Методы для ДЗ.
-
-    void removeBefore(int index) {
-
-        assert(index >= 0 && index <= length);
-
-            int *d = new int[length - 1];
-
-            for(int i = 0; i < index; ++ i) {
-
-                d[i] = data[i];
-
-            }
-
-            for(int i = index; i < length ; ++i) {
-
-                d[i] = data[i + 1];
-
-            }
-
-        delete[] data;
-            data = d;
-            --length;
-
-    }
-
-    void pop_back() {
-
-        removeBefore(length);
-
-    }
-
-    void insertArray(int array[], int index, int quantity) {
-
-        assert(index >= 0 && index <= length);
-
-//        for(int i = 0; i < quantity; ++i) {       //Работает, но трудозатратно
-
-//            insertBefore(array[i], index + i);
-
-//        }
-
-        int *d = new int[length + quantity];
-
-            for(int i = 0; i < index; ++i) {
-
-                d[i] = data[i];
-
-            }
-
-            for(int i = 0; i < quantity; ++i) {
-
-                d[index + i] = array[i];
-
-            }
-
-            for(int i = index + quantity; i < length + quantity; ++i) {
-
-                d[i] = data[i - quantity];
-
-            }
-
-        delete[] data;
-            data = d;
-            length = length + quantity;
-
-    }
-
-    int getLength() {
-
-        return length;
-
-    }
-
-    void sort(int quantity, string direction) {
-
-        if (direction == "backward") {
-
-            for(int i = 1; i < quantity; ++i) {
-
-                for(int r = 0; r < quantity - i; r++) {
-
-                    if(data[r] < data[r + 1]) {
-
-                        int temp = data[r];
-
-                            data[r] = data[r + 1];
-                            data[r + 1] = temp;
-
-                    }
-
-                }
-
-            }
-
-        } else if(direction == "forward") {
-
-            for(int i = 1; i < quantity; ++i) {
-
-                for(int r = 0; r < quantity - i; r++) {
-
-                    if(data[r] > data[r + 1]) {
-
-                        int temp = data[r];
-
-                            data[r] = data[r + 1];
-                            data[r + 1] = temp;
-
-                    }
-
-                }
-
-            }
-
-        }
-
-        for(int i = 0; i < quantity; ++i) {
-
-            cout << data[i] << " ";
-
-        }
-
-        cout << endl;
-
-    }
-
+private:
+    // Пусть все кепки будут красными.
+    string color = "красный";
 };
 
-int main() {
-
-    ArrayInt arr;
-    int array[5] = {11, 12, 13, 10, 8};
-
-        for(int i = 0; i < 5; i++) {
-
-        arr.push_back(i);
-
+class Human
+{
+public:
+    void Think()
+    {
+        brain.Think();
+    }
+    void InspectTheCap () {
+        cout << "Моя кепка имеет " << cap.getColor() << " цвет.";
     }
 
-        for(int i = 0; i < arr.getLength(); i++)
-            cout << arr[i] << " ";
-            cout << endl;
+private:
+    class Brain
+    {
+    public:
+        void Think()
+        {
+            cout << "Я думаю!" << endl;
+        }
+    };
+    Brain brain;
+    Cap cap;
+};
 
-    arr.insertBefore(9, 4);   //Добавим 9 в позицию 4
-
-        for(int i = 0; i < arr.getLength(); i++)
-            cout << arr[i] << " ";
-            cout << endl;
-
-    arr.removeBefore(1);       //Уберем элемент с позиции 1
-
-        for(int i = 0; i < arr.getLength(); i++)
-            cout << arr[i] << " ";
-            cout << endl;
-
-    arr.pop_back();             //Два раза уберем последний элемент
-    arr.pop_back();
-
-        for(int i = 0; i < arr.getLength(); i++)
-            cout << arr[i] << " ";
-            cout << endl;
-
-    arr.insertArray(array, 1, 5);   //Вставим 5 элементов массива, начиная с позиции 1
-
-        for(int i = 0; i < arr.getLength(); i++)
-            cout << arr[i] << " ";
-            cout << endl;
-
-    arr.sort(arr.getLength(), "forward");
-    arr.sort(arr.getLength(), "backward");
-
-return 0;
+int main()
+{
+    Human human;
+    human.Think();
+    human.InspectTheCap();
 }
+
+
+
+//Aggregation
+//class Worker
+//{
+//private:
+//    string m_name;
+
+//public:
+//    Worker(string name) : m_name(name)
+//    { }
+//    string getName() { return m_name; }
+//};
+
+//class Department
+//{
+//private:
+//    // Для простоты добавим только одного работника
+//    Worker *m_worker;
+//public:
+//    Department(Worker *worker = nullptr) : m_worker(worker)
+//    {  }
+//};
+
+//int main()
+//{
+//    // Создаем нового работника
+//    Worker *worker = new Worker("Anton");
+//    {
+//        // Создаем Отдел и передаем Работника в Отдел через параметр конструктора
+//        Department department(worker);
+//    } // department выходит из области видимости и уничтожается здесь
+
+//    // worker продолжает существовать
+//    cout << worker->getName() << " still exists!";
+//    delete worker;
+
+//    return 0;
+//}
+
+
+//assotiation
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Car
+{
+private:
+    string m_name;
+    int m_id;
+
+public:
+    Car(string name, int id) : m_name(name), m_id(id)
+    { }
+
+    string getName() { return m_name; }
+    int getId() { return m_id;  }
+};
+
+
+// Данный класс содержит автомобили и имеет функцию для "выдачи" автомобиля
+//class CarLot
+//{
+//private:
+//    static Car s_carLot[4];
+
+//public:
+//    // Удаляем конструктор по умолчанию, чтобы нельзя было создать объект этого класса
+//    CarLot() = delete;
+
+//    static Car* getCar(int id)
+//    {
+//        for (int count = 0; count < 4; ++count)
+//            if (s_carLot[count].getId() == id)
+//                return &(s_carLot[count]);
+
+//        return nullptr;
+//    }
+//};
+
+//Car CarLot::s_carLot[4] = { Car("Camry", 5), Car("Focus", 14), Car("Vito", 73), Car("Levante", 58) };
+
+//class Driver
+//{
+//private:
+//    string m_name;
+//    int m_carId; // для связывания классов используется эта переменная
+
+//public:
+//    Driver(string name, int carId) : m_name(name), m_carId(carId)
+//    {  }
+//    string getName() { return m_name; }
+//    int getCarId() { return m_carId; }
+
+//};
+
+//int main()
+//{
+//    Driver d("Ivan", 14); // Ivan ведет машину с ID 14
+
+//    Car *car = CarLot::getCar(d.getCarId()); // Получаем этот Автомобиль из CarLot
+
+//    if (car)
+//        cout << d.getName() << " is driving a " << car->getName() << '\n';
+//    else
+//        cout << d.getName() << " couldn't find his car\n";
+
+//    return 0;
+//}
+
+//Car CarLot::s_carLot[4] = { Car("Camry", 5), Car("Focus", 14), Car("Vito", 73), Car("Levante", 58) };
+
+//class Driver
+//{
+//private:
+//    string m_name;
+//    int m_carId; // для связывания классов используется эта переменная
+
+//public:
+//    Driver(string name, int carId) : m_name(name), m_carId(carId)
+//    {  }
+//    string getName() { return m_name; }
+//    int getCarId() { return m_carId; }
+
+//};
+
+
+
+//int main()
+//{
+//    Driver d("Ivan", 14); // Ivan ведет машину с ID 14
+
+//    Car *car = CarLot::getCar(d.getCarId()); // Получаем этот Автомобиль из CarLot
+
+//    if (car)
+//        cout << d.getName() << " is driving a " << car->getName() << '\n';
+//    else
+//        cout << d.getName() << " couldn't find his car\n";
+
+//    return 0;
+//}
