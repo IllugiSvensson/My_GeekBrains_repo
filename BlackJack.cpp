@@ -3,11 +3,11 @@
 #include <vector>
 using namespace std;
 
-enum rank {
+enum rank {	//Значение карты (туз, двойка, тройка и так долее). rank — это перечисление, куда входят все 13 значений
         ACE = 1, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN,
         JACK, QUEEN, KING
     };
-enum suit { CLUBS, DIAMONDS, HEARTS, SPADES };
+enum suit { CLUBS, DIAMONDS, HEARTS, SPADES }; //Масть карты (трефы, бубны, червы и пики). suit — это перечисление, содержащее четыре возможные масти
 
 class Card
 {
@@ -19,13 +19,14 @@ public:
     enum suit { CLUBS, DIAMONDS, HEARTS, SPADES };
     
     Card(rank r = ACE, suit s = SPADES, bool ifu = true);
-    int GetValue() const;
-    void Flip();
-    
+    int GetValue() const;  //Возвращает значение карты
+    void Flip();  //Переворачивает карту. Может использоваться для того, чтобы перевернуть карту лицом вверх или вниз
+    friend ostream& operator<<(ostream& os, const Card& aCard);
+	
 private:
     rank m_Rank;
     suit m_Suit;
-    bool m_IsFaceUp;
+    bool m_IsFaceUp; //Указывает, как расположена карта — вверх лицом или рубашкой. Влияет на то, отображается она или нет
 };
 
 Card::Card(rank r, suit s, bool ifu) : m_Rank(r), m_Suit(s), m_IsFaceUp(ifu)
@@ -81,10 +82,10 @@ public:
     // виртуальный деструктор
     virtual ~Hand();
     
-    // добавляет карту в руку
+    // Добавляет карту в руку. Добавляет указатель на объект типа Сard в вектор m_Сards
     void Add(Card* pCard);
     
-    // очищает руку от карт
+    // Очищает руку от карт. Удаляет все указатели из вектора m_Сards, устраняя все связанные с ними объекты в куче
     void Clear();
     
     //получает сумму очков карт в руке, присваивая тузу
@@ -92,7 +93,7 @@ public:
     int GetTotal() const;
     
 protected:
-    vector<Card*> m_Cards;
+    vector<Card*> m_Cards; //Коллекция карт. Хранит указатели на объекты типа Сard
 };
 
 Hand::Hand()
@@ -123,7 +124,7 @@ void Hand::Clear()
     // очищает вектор указателей
     m_Cards.clear();
 }
-int Hand::GetTotal() const
+int Hand::GetTotal() const  //Возвращает сумму очков карт руки
 {
     // если карт в руке нет, возвращает значение 0
     if (m_Cards.empty())
@@ -171,61 +172,191 @@ int Hand::GetTotal() const
 class Deck: public Hand {
 private:
     
-    vold Populate();
-    void Shuffle();
-    vold Deal (Hand& aHand);
-    void AddltionalCards (GenericPlayer& aGenerlcPlayer);
+    vold Populate();  //Создает стандартную колоду из 52 карт
+    void Shuffle();		//Тасует карты
+    vold Deal (Hand& aHand);	//Раздает в руку одну карту
+    void AddltionalCards (GenericPlayer& aGenerlcPlayer);	//Раздает игроку дополнительные карты до тех пор, пока он может и хочет их получать
 
 public:
 
 };
 
-class GenericPlayer: public Hand {
-private:
+class GenericPlayer : public Hand
+{
+    friend ostream& operator<<(ostream& os, const GenericPlayer& aGenericPlayer);
     
-    string m_Name;
+public:
+    GenericPlayer(const string& name = "");
+    
+    virtual ~GenericPlayer();
+    
+    // показывает, хочет ли игрок продолжать брать карты
+    // Для класса GenericPlayer функция не имеет своей реализации,
+    // т.к. для игрока и дилера это будут разные функции
     virtual bool IsHitting() const = 0;
-    bool IsBoosted() const;
-    void Bust() const;  
-
-public:
-
-};
-
-class Player: public GenericPlayer {
-private:
     
+    // возвращает значение, если у игрока перебор -
+    // сумму очков большую 21
+    // данная функция не виртуальная, т.к. имеет одинаковую реализацию
+    // для игрока и дилера
+    bool IsBusted() const;
+    
+    // объявляет, что игрок имеет перебор
+    // функция одинакова как для игрока, так и для дилера
+    void Bust() const;
+    
+protected:
+    string m_Name;
+};
+GenericPlayer::GenericPlayer(const string& name) :
+m_Name(name)
+{}
+GenericPlayer::~GenericPlayer()
+{}
+bool GenericPlayer::IsBusted() const
+{
+    return (GetTotal() > 21);
+}
+void GenericPlayer::Bust() const
+{
+    cout << m_Name << " busts.\n";
+}
+
+
+class Player : public GenericPlayer
+{
+public:
+    Player(const string& name = "");
+    
+    virtual ~Player();
+    
+    // показывает, хочет ли игрок продолжать брать карты
     virtual bool IsHitting() const;
+    
+    // объявляет, что игрок победил
     void Win() const;
-    void Lose() const;
-    void Push() const;
-
-public:
-
-};
-
-class House: public GenericPlayer {
-private:
     
-    virtual bool IsHitting() const;
-    void FlipFirstCard();
-
-public:
-
+    // объявляет, что игрок проиграл
+    void Lose() const;
+    
+    // объявляет ничью
+    void Push() const;
 };
+
+bool Player::IsHitting() const
+{
+    cout << m_Name << ", do you want a hit? (Y/N): ";
+    char response;
+    cin >> response;
+    return (response == 'y' || response == 'Y');
+}
+void Player::Win() const
+{
+    cout << m_Name << " wins.\n";
+}
+
+void Player::Lose() const
+{
+    cout << m_Name << " loses.\n";
+}
+
+void Player::Push() const
+{
+    cout << m_Name << " pushes.\n";
+}
+
+class House : public GenericPlayer
+{
+public:
+    House(const string& name = "House");
+    
+    virtual ~House();
+    
+    // показывает, хочет ли дилер продолжать брать карты
+    virtual bool IsHitting() const;
+    
+    // переворачивает первую карту
+    void FlipFirstCard();
+};
+bool House::IsHitting() const
+{
+    return (GetTotal() <= 16);
+}
+bool House::IsHitting() const
+{
+    return (GetTotal() <= 16);
+}
+void House::FlipFirstCard()
+{
+    if (!(m_Cards.empty()))
+    {
+        m_Cards[0]->Flip();
+    }
+    else
+    {
+        cout << "No card to flip!\n";
+    }
+}
 
 class Game {
 private:
     
-    Deck m_Deck;
-    House m_House;
-    vector<Player> m_Players;
-    void Play();
+    Deck m_Deck;	//Колода карт
+    House m_House;	//Рука дилера
+    vector<Player> m_Players;	//Группа игроков-людей. Вектор, содержащий объекты типа Player
+    void Play();			//Проводит кон игры Blackjack
 
 public:
 
 };
 
+
+// перегружает оператор <<, чтобы получить возможность отправить
+// объект типа Card в поток cout
+ostream& operator<<(ostream& os, const Card& aCard)
+{
+    const string RANKS[] = { "0", "A", "2", "3", "4", "5", "6", "7", "8", "9","10", "J", "Q", "K" };
+    const string SUITS[] = { "c", "d", "h", "s" };
+    
+    if (aCard.m_IsFaceUp)
+    {
+        os << RANKS[aCard.m_Rank] << SUITS[aCard.m_Suit];
+    }
+    else
+    {
+        os << "XX";
+    }
+    
+    return os;
+}
+
+ostream& operator<<(ostream& os, const GenericPlayer& aGenericPlayer)
+{
+    os << aGenericPlayer.m_Name << ":\t";
+    
+    vector<Card*>::const_iterator pCard;
+    if (!aGenericPlayer.m_Cards.empty())
+    {
+        for (pCard = aGenericPlayer.m_Cards.begin();
+             pCard != aGenericPlayer.m_Cards.end();
+             ++pCard)
+        {
+            os << *(*pCard) << "\t";
+        }
+        
+        
+        if (aGenericPlayer.GetTotal() != 0)
+        {
+            cout << "(" << aGenericPlayer.GetTotal() << ")";
+        }
+    }
+    else
+    {
+        os << "<empty>";
+    }
+    
+    return os;
+}
 
 
 int main(int argc, char *argv[])  {
