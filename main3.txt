@@ -1,0 +1,216 @@
+//ДЗ 3
+//Смирнов Александр
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#define SIZE 10000
+int array[SIZE] = {0};
+
+void swap(int *a, int *b) {
+
+    int t = *a;
+
+        *a = *b;
+        *b = t;
+
+}
+
+int arrsearch(int *c);
+
+int main(int argc, char *argv[]) {
+
+    srand(time(NULL));
+    int i, j, t;
+    int cnt = 0;
+    int arr[SIZE];
+
+    printf("Массив до сортировок: ");
+
+        for(i = 0; i < SIZE; i++) {
+
+            array[i] = rand() % 10;
+            arr[i] = array[i];
+            printf("%d ", array[i]);
+
+        }
+
+    puts(" ");
+
+//1. Попробовать оптимизировать пузырьковую сортировку.
+//Сравнить количество операций сравнения оптимизированной
+//и не оптимизированной программы. Написать функции сортировки,
+//которые возвращают количество операций.
+
+        for(i = 0; i < SIZE; i++) {
+
+            cnt++;  //Число проходов по массиву
+
+            for(j = 0; j < SIZE - 1; j++) {
+
+                cnt++;  //Количество проверок элементов
+
+                if(arr[j] > arr[j + 1]) {
+
+                    cnt++;  //количество свапов
+                    swap(&arr[j], &arr[j + 1]);
+
+                }
+
+            }
+
+        }
+
+        printf("Пузырьковая сортировка: ");
+
+            for(i = 0; i < SIZE; i++) {
+
+                printf("%d ", arr[i]);
+                arr[i] = array[i];
+
+            }
+
+        printf("\nЧисло действий: %d\n", cnt);
+
+    puts(" ");
+
+        cnt = 0;
+        i = 0;
+        t = 1;
+
+    while (t) {
+
+        t = 0;
+        cnt++;
+
+        for(j = 0; j < SIZE - 1 - i; j++) {
+
+            cnt++;
+
+            if(arr[j] > arr[j + 1]) {
+
+                swap(&arr[j], &arr[j + 1]);
+                t = 1;
+                cnt++;
+
+            }
+
+        }
+
+        i = i + 1;
+
+    }
+
+    printf("Оптимизированная сортировка: ");
+
+        for(i = 0; i < SIZE; i++) {
+
+            printf("%d ", arr[i]);
+            arr[i] = array[i];
+
+        }
+
+    printf("\nЧисло действий: %d\n", cnt);
+
+    puts(" ");
+
+//2. *Реализовать шейкерную сортировку.
+
+    cnt = 0;
+    int L = 1;
+    int R = SIZE - 1;
+
+        while(L <= R) {
+
+            cnt++;
+            for(i = R; i >= L; i--) {
+
+                cnt++;
+                if(arr[i - 1] > arr[i]) {
+
+                    swap(&arr[i - 1], &arr[i]);
+                    cnt++;
+
+                }
+
+            }
+
+            L++;
+
+            for(i = L; i <= R; i++) {
+
+                cnt++;
+                if(arr[i - 1] > arr[i]) {
+
+                    swap(&arr[i - 1], &arr[i]);
+                    cnt++;
+
+                }
+
+            }
+
+            R--;
+
+        }
+
+    printf("Шейкерная сортировка: ");
+
+        for(i = 0; i < SIZE; i++) {
+
+            printf("%d ", arr[i]);
+
+        }
+
+    printf("\nЧисло проходов: %d\n", cnt);
+
+    puts(" ");
+
+//3. Реализовать бинарный алгоритм поиска в виде функции, которой
+//передается отсортированный массив. Функция возвращает индекс найденного
+//элемента или -1, если элемент не найден.
+
+    t = arrsearch(arr);
+
+        if(t == -1)
+
+            printf("Значение не найдено\n");
+
+        else
+
+            printf("Индекс: %d\n", t);
+
+return 0;
+}
+
+int arrsearch(int *c) {
+
+    int s, m;
+    int L = 0;
+    int R = SIZE - 1;
+
+        printf("Введите число для поиска: ");
+        scanf("%d", &s);
+
+           while(L <= R) {
+
+                m =  (L + R) / 2;
+
+                if(c[m] > s) {
+
+                    R = m - 1;
+
+                } else if(c[m] < s) {
+
+                    L = m + 1;
+
+                } else
+
+                    return m;
+
+            }
+
+return -1;
+}
+
+//4. *Подсчитать количество операций для каждой из сортировок
+//и сравнить его с асимптотической сложностью алгоритма.

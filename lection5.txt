@@ -1,0 +1,417 @@
+#include <stdio.h>
+
+#define T char
+#define MaxN 1000
+
+T Stack[MaxN];
+
+int N = -1;
+
+void push(T i)
+{
+    if (N < MaxN)
+    {
+        N++;
+        Stack[N] = i;
+    }
+    else 
+        printf("Stack overflow");
+}
+
+T pop()
+{
+    if (N != -1) 
+        return Stack[N--];
+    else 
+        printf("Stack is empty");
+}
+
+int main(int argc, char *argv[])
+{
+    T c;
+    push('a');
+    push('b');
+    push('c');
+    push('d');
+    push('e');
+    push('f');
+    while(N != -1) 
+        printf("%c",pop());
+    return 0;
+}
+
+
+struct TNode
+{
+    int value;          // Данные
+    struct TNode* next; // Указатель на следующий элемент списка
+};
+struct TNode* Head=NULL;
+
+struct TNode
+{
+    int value;          // Данные
+    struct TNode *next; // Указатель на следующий элемент списка
+    struct TNode *prev; // Указатель на предыдущий элемент списка
+};
+struct TNode *head;
+struct TNode *tail;
+
+#include <stdio.h>
+#include <malloc.h>
+#define T char
+// Опишем структуру узла списка
+struct TNode
+{
+    T value;
+    struct TNode *next;
+};
+typedef struct TNode Node;
+
+struct Stack
+{
+    Node *head;
+    int size;
+    int maxSize;
+};
+struct Stack Stack;
+
+void push(T value)
+{
+    if (Stack.size >= Stack.maxSize) {
+        printf("Error stack size");
+        return;
+    }
+    Node *tmp = (Node*) malloc(sizeof(Node));
+    tmp->value = value;
+    tmp->next = Stack.head;
+    Stack.head = tmp;
+    Stack.size++;
+}
+
+T pop() {
+    if (Stack.size == 0) 
+    {
+        printf("Stack is empty");
+        return;
+    }
+// Временный указатель
+    Node* next = NULL;
+// Значение «наверху» списка
+    T value;
+    Value = Stack.head->value;
+    Next = Stack.head;
+    Stack.head = Stack.head->next;
+// Запись, на которую указывала «голова», удаляем, освобождая память
+    free(next);
+// Возвращаем значение, которое было в «голове»
+    Stack.size--;
+    return value;
+}
+
+void PrintStack()
+{
+    Node *current = Stack.head;
+    while(current != NULL)
+    {
+        printf("%c ", current->value);
+        current = current->next;
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    Stack.maxSize = 100;
+    Stack.head = NULL;
+    push('a');
+    push('b');
+    push('c');
+    push('d');
+    push('e');
+    push('f');
+    PrintStack();
+    return 0;
+}
+
+
+Пример создания структуры Stack на основе массива с использованием структуры
+Если нам нужно в программе использовать несколько стеков, то мы можем оформить структуру Stack и в дальнейшем создавать переменные данной структуры.
+#include <stdio.h>
+#define MaxN 1000
+#define T char
+
+struct TStack
+{
+    int N;                    // Номер верхнего элемента
+    T Data[MaxN];             // Данные
+}; 
+struct TStack Stack1;
+struct TStack Stack2;
+struct TStack Stack3;
+
+void push(struct TStack *Stack, T data)
+{
+    Stack->N++;
+    (*Stack).Data[(*Stack).N] = data;
+    // Более простой вариант:   
+    // Stack->Data[Stack->N] = data;
+}
+T pop(struct TStack *Stack)
+{
+    if (Stack->N != -1) 
+        return Stack->Data[Stack->N--];
+}
+void init(struct TStack *Stack)
+{
+    Stack.N = -1;   
+}
+int main(int argc, char *argv[])
+{
+    init(&Stack1);
+    init(&Stack2);
+    init(&Stack3);
+    push(&Stack1, 'a');
+    push(&Stack1, 'b');
+    push(&Stack2, 'c');
+    push(&Stack3, 'd');
+    push(&Stack1, 'e');
+    push(&Stack1, 'f');
+    while(Stack1.N != -1) 
+        printf("%c", pop(&Stack1));
+    return 0;
+}
+
+Вычисление выражения, записанного в постфиксной записи
+Дана строка выражения, записанного в постфиксной записи. Написать программу, которая вычисляет это выражение. 
+Пример: 2 2 + (= 4)  
+Решение:
+#include <stdio.h>
+#include <string.h>
+#include <malloc.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+#define T int
+
+struct TNode
+{
+    T value;                  // Данные
+    struct TNode *next;       // Указатель на следующий элемент списка
+};
+
+typedef struct TNode Node;
+
+Node* head = NULL;
+
+void Push(T value)
+{
+    Node *temp;
+    temp = (Node*)malloc(sizeof(Node));
+    temp->value = value;
+    temp->next = head;
+    head = temp;
+}
+
+T Pop()
+{
+    Node* temp = NULL;
+    T value = head->value;
+    temp = head;
+    head = head->next;
+    free(temp);
+    return value;
+}
+
+void Print()
+{
+    Node* current;
+    current = head;
+    while (current != NULL)
+    {
+        printf("%d ", current->value);
+        current = current->next;
+    }
+}
+
+void PrintR(Node* current)
+{
+    if (current != NULL)
+    {
+        PrintR(current->next);
+        printf("%d ", current->value);
+    }
+}
+
+int isNumber(char *str)
+{
+    int i = 0;
+    while (str[i] != '\0')
+        if (!isdigit(str[i++])) 
+            return 0;
+    return 1;
+}
+
+int main(int argc, char *argv[])
+{
+    int res = 0;
+    // 2+2 = 2 2 +
+    // (2+2)*2=2 2 + 2 *
+    char buf[100] = "20 30 - 10 *"; // (20-30)*10
+    printf("Input postfix expression:");
+    // Выражение, разделенное пробелами (по одному пробелу!)
+    // gets_s(buf);
+    for (int i = 0; I < strlen(buf); i++)
+    {
+// Получаем элемент из строки
+        char el[20];                // Элемент (число или операция)
+        int j = 0;
+        while (buf[i] != ' ' && buf[i] != '\0')
+        {
+            el[j] = buf[i];
+            j++;
+            i++;
+        }
+        el[j] = '\0';
+// Если элемент – число
+        if (isNumber(el)) 
+            Push(atoi(el));         // Кладём его в стек, преобразовав из 
+                                    // строки в integer
+        else
+        {
+            switch (el[0])
+            {
+                case '+':
+                    res = Pop() + Pop();
+                    Push(res);
+                    break;
+                case '-':
+                    res = -Pop() + Pop();
+                    Push(res);
+                    break;
+                case '*':
+                    res = Pop() * Pop();
+                    Push(res);
+                    break;
+                case '/':
+                    res = Pop() / Pop();
+                    Push(res);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    printf("%d", Pop());
+    getchar();
+    return 0;
+}
+
+***Задача МГУ ВМК
+Рассмотрим работу с двусвязным списком на примере решения реальной задачи МГУ ВМК.
+Задание: написать программу, загружающую из файла последовательность символьных строк ограниченной длины и располагающую их элементы в динамически создаваемом двусвязном списке. Отсортировать список и вывести его на экран. 
+Мы предоставим часть решения. Сортировку списка вам предстоит сделать самостоятельно.
+#include <stdio.h>
+#include <malloc.h>
+#include <string.h>
+
+struct TDblNode {
+    char string[256];
+    struct TDblNode *next;
+    struct TDblNode *prev;
+};
+typedef struct TDblNode Node;
+
+struct DblList
+{
+    Node *head, *tail, *current;
+};
+struct DblList List;
+
+/*Основные действия, производимые над узлами ДС:
+инициализация списка;
+добавление узла в список;
+удаление узла из списка;
+удаление корня списка;
+вывод элементов списка;
+вывод элементов списка в обратном порядке;
+взаимообмен двух узлов списка.*/
+// Инициализация ДС
+Node* Init(char* a)
+{
+    Node *temp;
+// Выделение памяти под корень списка
+    temp = (Node*) malloc(sizeof(Node));
+// Перенос строки  
+    strcpy(temp->string, a);
+    temp->next = NULL;
+    temp->prev = NULL;
+    return temp;
+}
+
+/*Добавление узла в ДС
+Функция добавления узла в список принимает два аргумента:
+указатель на узел, после которого происходит добавление;
+данные для добавляемого узла.*/
+/*Добавление узла в ДС включает в себя следующие этапы:
+создание узла добавляемого элемента и заполнение его поля данных;
+переустановка указателя «следующий» узла, предшествующего добавленному, на добавляемый узел;
+переустановка указателя «предыдущий» узла, следующего за добавляемым, на добавляемый узел;
+установка указателя «следующий» добавляемого узла на следующий узел (тот, на который указывал предшествующий узел);
+установка указателя «предыдущий» добавляемого узла на узел, предшествующий добавляемому (узел, переданный в функцию).*/
+
+Node* AddElem(Node *current, char *a)
+{
+    Node *temp, *p;
+    Temp = (Node*) malloc(sizeof(Node));
+    p = current->next;
+    current->next = temp;
+    strcpy(temp->string, a); // Перенос строки
+    temp->next = p;
+    temp->prev = current;
+    if (p!=NULL) 
+        p->prev = temp;
+    current = temp;
+    return current;
+}
+
+/*Удаление узла ДС включает в себя следующие этапы:
+установка указателя «следующий» предыдущего узла на узел, следующий за удаляемым;
+установка указателя «предыдущий» следующего узла на узел, предшествующий удаляемому;
+освобождение памяти удаляемого узла.*/
+
+// Вывод элементов ДС
+void ListPrint()
+{
+    Node *p = List.head;
+    do
+    {
+        if (p == List.current) 
+            printf("*");
+        printf("%s ", p->string);
+        p = p->next;
+    }
+// Условие окончание обхода
+    while(p!=NULL);
+}
+
+int main(void)
+{
+    char buf[256];
+    FILE* file;
+    file = fopen("D:\\temp\\str.txt", "r");
+    fscanf(file, "%s", buf);
+    List.head = Init(buf);
+    List.current = List.head;
+    List.tail = List.head;
+    while (fscanf(file, "%s", buf) != EOF) {
+        List.current = AddElem(List.current, buf);
+    }
+    ListPrint();
+    printf("\n");
+    return 0;
+}
+
+
+
+
+
