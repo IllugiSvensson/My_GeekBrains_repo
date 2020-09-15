@@ -7,7 +7,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     setWindowTitle("Распределятор фотографий");
-    setFixedSize(332, 265);
+    setFixedSize(332, 482);
+
+        auto fileSystemModel = new QFileSystemModel(this);
+        fileSystemModel->setRootPath(QDir::rootPath());
+        fileSystemModel->setReadOnly(true);
+
+            ui->Pictures->setModel(fileSystemModel);
+            ui->Folders->setModel(fileSystemModel);
 
 }
 
@@ -24,6 +31,13 @@ void MainWindow::on_Input_Folder_clicked() {
 
     ui->InputPath->setText(ip);
 
+    auto fileSystemModel = new QFileSystemModel(this);
+    fileSystemModel->setRootPath(QDir::rootPath());
+    fileSystemModel->setReadOnly(true);
+
+        ui->Pictures->setModel(fileSystemModel);
+        ui->Pictures->setRootIndex(fileSystemModel->index(ip));
+
 }
 
 void MainWindow::on_Output_Folder_clicked() {
@@ -33,17 +47,37 @@ void MainWindow::on_Output_Folder_clicked() {
 
     ui->OutputPath->setText(op);
 
+    auto fileSystemModel = new QFileSystemModel(this);
+    fileSystemModel->setRootPath(QDir::rootPath());
+    fileSystemModel->setReadOnly(true);
+
+        ui->Folders->setModel(fileSystemModel);
+        ui->Folders->setRootIndex(fileSystemModel->index(op));
+
 }
 
 void MainWindow::on_Move_Pics_clicked() {
 
     QDir inputDir(ui->InputPath->text());
     QDir outputDir(ui->OutputPath->text());
-    inputDir.cdUp();
 
-    //foreach()
+    QStringList iDir = inputDir.entryList(QDir::Files, QDir::Name);
+    QStringList oDir = outputDir.entryList(QDir::Dirs, QDir::Name);
+
+    foreach(QString fold, oDir) {
+
+        if (fold == "." || fold == "..") {
+
+            continue;
+
+        }
+
+        foreach(QString pic, iDir) {
 
 
 
+        }
+
+    }
 
 }

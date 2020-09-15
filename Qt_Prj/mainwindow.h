@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QFile>
+#include <QFileSystemModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

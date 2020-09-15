@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>332</width>
-    <height>265</height>
+    <height>482</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>151</width>
       <height>61</height>
      </rect>
@@ -30,15 +30,16 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Открыть папку, в которой &lt;/p&gt;&lt;p&gt;лежат фотографии&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>Открыть папку, в которой
-лежат фотографии</string>
+     <string>Открыть папку, в 
+которой лежат 
+фотографии</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Output_Folder">
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>20</y>
+      <y>10</y>
       <width>151</width>
       <height>61</height>
      </rect>
@@ -47,17 +48,18 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Открыть папку, в которой лежат &lt;/p&gt;&lt;p&gt;целевые папки&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
-     <string>Открыть папку, в которой
-лежат целевые папки</string>
+     <string>Открыть папку, в 
+которой лежат 
+целевые папки</string>
     </property>
    </widget>
    <widget class="QPushButton" name="Move_Pics">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>130</y>
+      <x>110</x>
+      <y>400</y>
       <width>121</width>
-      <height>81</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="toolTip">
@@ -76,9 +78,9 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>90</y>
-      <width>141</width>
+      <x>10</x>
+      <y>370</y>
+      <width>151</width>
       <height>21</height>
      </rect>
     </property>
@@ -90,9 +92,29 @@
     <property name="geometry">
      <rect>
       <x>170</x>
-      <y>90</y>
-      <width>141</width>
+      <y>370</y>
+      <width>151</width>
       <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="Pictures">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>151</width>
+      <height>271</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTreeView" name="Folders">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>80</y>
+      <width>151</width>
+      <height>271</height>
      </rect>
     </property>
    </widget>
@@ -103,7 +125,7 @@
      <x>0</x>
      <y>0</y>
      <width>332</width>
-     <height>20</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
