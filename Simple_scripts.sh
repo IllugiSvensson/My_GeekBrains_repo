@@ -1,0 +1,32 @@
+﻿#!/bin/bash
+#Написать скрипт, который удаляет из текстового файла пустые строки и заменяет нижний регистр на верхний.
+# Запуск скрипта: ./Script input_file.txt > output_file.txt
+sed '/^$/d' $1 | tr '[:lower:]' '[:upper:]';
+
+#Убрать все строки, начинающиес с пробелов или табуляции:
+#Запуск скрипта: ./Script file.txt
+#!/bin/bash
+for file in *txt
+do 
+	cat $file						#Циклом открываем текстовые файлы
+	grep -v "^[[:space:]]"$file | tr -d "\r" > tempfile	#Выделяем по шаблону то, что нужно и перенаправляем в новый файл
+	mv tempfile $file					#Переименовываем в исходный файл
+done
+	
+#!/bin/bash	
+#Скрипт, организующий структуру, в которую входят директории для годов и месяцев, 
+#а так же будет организовано перемещение фотографий по директориям год/месяц.
+#Запуск скрипта: ./Script
+
+for year in 201{0..7}							#Циклом перебираем года
+do
+    mkdir $year								
+    for month in Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec	#В каждый год добавляем папки с месяцами
+    do
+        mkdir $year/$month
+	for file in {1..9}						
+	do
+	    mv $file.jpg $year/$month/$file.jpg 2> /dev/null		#Циклом перемещаем файлы в каталоги
+	done
+    done
+done
