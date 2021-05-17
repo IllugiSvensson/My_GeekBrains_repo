@@ -124,7 +124,7 @@ done | zenity --progress --title="Проверка сети" --text="Ищем к
 CancelButtonClicked $CANCEL			#Выходим из программы, если нажали отмену
 echo `cat /soft/scripts/CWR_online.txt` >/soft/scripts/CWR_online.txt		#Транспонируем таблицу в список
 echo `cat /soft/scripts/CWR_offline.txt` >/soft/scripts/CWR_offline.txt		#Для удобной работы
-HostsOnline=`cat /soft/scripts/CWR_online.txt`		#Либо сохраняем списпки хостов
+HostsOnline=`cat /soft/scripts/CWR_online.txt`		#Либо сохраняем списки хостов
 HostsOffline=`cat /soft/scripts/CWR_offline.txt`
 DeleteTmpFile
 
